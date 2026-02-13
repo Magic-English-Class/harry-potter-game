@@ -414,12 +414,12 @@
             UI.areaWord.textContent = wordObj.word;
             UI.areaMeaning.textContent = wordObj.meaning;
             UI.areaMic.classList.remove('hidden');
-            if(Game.repCount === 0) setTimeout(() => speak(wordObj.word), 50);
+            if(Game.repCount === 0) speak(wordObj.word);
         }
         else if(Game.phase === 2) {
             UI.areaWord.classList.add('hidden'); UI.areaMeaning.classList.add('hidden');
             UI.areaOpts.classList.remove('hidden');
-            setTimeout(() => speak(wordObj.word), 50);
+            speak(wordObj.word);
             generateOptions(wordObj);
         }
         else if(Game.phase === 3 || Game.phase === 5) {
