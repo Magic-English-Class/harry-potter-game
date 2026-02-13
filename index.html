@@ -178,6 +178,31 @@
         .unit-item.active { border-color: var(--primary); color: var(--primary); font-weight: bold; }
         .hidden { display: none !important; }
         .btn-link { background: none; border: none; color: #9CA3AF; text-decoration: underline; margin-top: 20px; cursor: pointer;}
+        /* --- 新增：自动保存提示 (Toast) --- */
+        .save-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #4ade80; /* 亮绿色 */
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            pointer-events: none; /* 让点击穿透，不挡手 */
+            z-index: 9999;
+        }
+
+        /* 显示时的状态 */
+        .save-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+               
     </style>
 </head>
 <body>
@@ -188,6 +213,9 @@
         <p style="color:#aaa; font-size: 0.9rem;">Magic Battle Edition</p>
         <div id="unit-list" class="unit-grid"></div>
         <button class="btn-link" onclick="resetProgress()">重置进度</button>
+        <div id="unit-list" class="unit-grid"></div>
+
+        <button class="btn-link" onclick="resetProgress()" style="color: #ef4444; margin-top: 40px;">⚠️ 重置所有进度 (Start Over)</button>
     </div>
 
     <div id="view-game" class="hidden">
@@ -245,6 +273,58 @@
         sfxShoot: new Audio('assets/shoot.mp3'),
         sfxFail: new Audio('assets/fail.mp3')
     };
+    // --- 新增功能：自动存档系统 ---
+
+    // 1. 自动保存函数
+    function autoSave() {
+        // 保存当前单元和当前组
+        localStorage.setItem('currentUnit', Game.unit);
+        localStorage.setItem('currentGroup', Game.groupIndex);
+    
+        // 显示右下角提示
+        const toast = document.getElementById('save-toast');
+        toast.classList.add('show');
+    
+        // 2秒后自动消失
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
+    }
+
+    // 2. 检查是否有存档 (自动读取)
+    function checkAutoLoad() {
+        const savedUnit = localStorage.getItem('currentUnit');
+        const savedGroup = localStorage.getItem('currentGroup');
+
+        // 如果有存档
+        if (savedUnit && savedGroup) {
+            const u = parseInt(savedUnit);
+            const g = parseInt(savedGroup);
+        
+            // 弹窗询问
+            if (confirm(`欢迎回来！\n检测到上次学到了 Unit ${u} - Group ${g + 1}。\n是否继续？`)) {
+                // 用户点“确定”，直接跳过去
+                startGame(u, g);
+            } else {
+                // 用户点“取消”，显示菜单，不做操作
+                renderMenu();
+            }
+        } else {
+            // 没有存档，正常显示菜单
+            renderMenu();
+        }
+    }
+
+    // 3. 重置进度函数
+    function resetProgress() {
+        if (confirm("⚠️ 警告：\n确定要清空所有学习进度吗？\n这将无法恢复！")) {
+            localStorage.clear(); // 清空所有记录
+            location.reload();    // 刷新页面
+        }
+    } 
+     
+
+
 
     /** DOM 元素缓存 */
     const UI = {
@@ -274,7 +354,8 @@
     window.onload = function() {
         if(typeof wordList === 'undefined') return alert("未找到 word_data.js");
         initSpeech();
-        renderMenu();
+        // --- 改这里：先检查存档，而不是直接显示菜单 ---
+        checkAutoLoad();
     };
 
     // --- 游戏动画与音效控制 ---
@@ -416,18 +497,32 @@ function systemSpeak(text) {
         });
     }
 
-    function startGame(unitId) {
+    function startGame(unitId, startGroupIndex = 0) {
         Game.unit = unitId;
         const raw = wordList.filter(w => w.unit === unitId);
         Game.allGroups = [];
         for(let i=0; i<raw.length; i+=5) Game.allGroups.push(raw.slice(i, i+5));
-        UI.menu.classList.add('hidden'); UI.game.classList.remove('hidden');
-        loadGroup(0);
+
+        // 切换界面
+        UI.menu.classList.add('hidden'); 
+        UI.game.classList.remove('hidden');
+        
+        // 加载指定 Group (如果是新游戏就是 0，读档就是记录的数字)
+        loadGroup(startGroupIndex);
     }
 
     function loadGroup(idx) {
-        if(idx >= Game.allGroups.length) { startUnitReview(); return; }
-        Game.groupIndex = idx; Game.currentWords = Game.allGroups[idx];
+        if(idx >= Game.allGroups.length) { 
+            startUnitReview(); 
+            return; 
+        }
+        
+        Game.groupIndex = idx; 
+        Game.currentWords = Game.allGroups[idx];
+        
+        // --- 新增：每加载一个新组，就自动保存一次 ---
+        autoSave(); 
+        
         startPhase(1);
     }
 
@@ -565,7 +660,16 @@ function systemSpeak(text) {
     function finishUnit() {
         showToast("Unit Victory!", true);
         const currentUnlocked = parseInt(localStorage.getItem('unlockedUnit') || 1);
-        if(Game.unit >= currentUnlocked) localStorage.setItem('unlockedUnit', Game.unit + 1);
+        
+        // 解锁下一关
+        if(Game.unit >= currentUnlocked) {
+            localStorage.setItem('unlockedUnit', Game.unit + 1);
+        }
+        
+        // --- 新增：通关后，清除“当前进度”，防止下次进来卡在旧关卡 ---
+        localStorage.removeItem('currentUnit');
+        localStorage.removeItem('currentGroup');
+
         setTimeout(() => { UI.game.classList.add('hidden'); renderMenu(); }, 2000);
     }
 
@@ -584,5 +688,6 @@ function systemSpeak(text) {
     }
 }
 </script>
+<div id="save-toast" class="save-toast">💾 进度已保存</div>
 </body>
 </html>
