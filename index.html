@@ -243,7 +243,27 @@
             0% { opacity: 0; transform: translate(-50%, -30%) scale(0.5); }
             20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
             100% { opacity: 0; transform: translate(-50%, -150%) scale(1); }
-        }    
+        }  
+
+    /* --- 新增：底部重置按钮样式 --- */
+    .footer-reset {
+        margin-top: 60px;          /* 距离上面远一点 */
+        margin-bottom: 20px;       /* 距离底部留空 */
+        font-size: 0.75rem;        /* 字号很小 */
+        color: #6B7280;            /* 灰色 */
+        text-decoration: underline;
+        cursor: pointer;
+        opacity: 0.4;              /*平时半透明，很不显眼 */
+        transition: all 0.3s;
+    }
+
+    .footer-reset:hover {
+        opacity: 1;                /* 鼠标放上去变清晰 */
+        color: #DC2626;            /* 变成红色警示 */
+    }
+
+
+
     </style>
 </head>
 <body>
@@ -252,11 +272,12 @@
     <div id="view-menu">
         <h1 style="color:#fff; margin-bottom: 5px;">Hogwarts Words</h1>
         <p style="color:#aaa; font-size: 0.9rem;">Magic Battle Edition</p>
+    
         <div id="unit-list" class="unit-grid"></div>
-        <button class="btn-link" onclick="resetProgress()">重置进度</button>
-        <div id="unit-list" class="unit-grid"></div>
-
-        <button class="btn-link" onclick="resetProgress()" style="color: #ef4444; margin-top: 40px;">⚠️ 重置所有进度 (Start Over)</button>
+        
+        <div onclick="resetProgress()" class="footer-reset">
+            Reset All Progress
+        </div>             
     </div>
 
     <div id="view-game" class="hidden">
