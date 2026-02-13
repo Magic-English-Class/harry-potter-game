@@ -202,11 +202,52 @@
             opacity: 1;
             transform: translateY(0);
         }
-               
+    
+        
+        /* --- 新增：积分系统样式 --- */
+
+        /* 1. 右上角的计分板 */
+        .score-board {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #FFD700; /* 金色 */
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid #FFD700;
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            text-shadow: 1px 1px 2px black;
+        }
+
+        /* 2. 加分时的浮动动画文字 */
+        .score-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #FFD700;
+            font-size: 3rem;
+            font-weight: 900;
+            text-shadow: 0 0 20px rgba(255, 165, 0, 0.8);
+            pointer-events: none;
+            z-index: 2000;
+            animation: floatUp 1.5s forwards; /* 播放动画 */
+        }
+
+        /* 定义向上飘的动画 */
+        @keyframes floatUp {
+            0% { opacity: 0; transform: translate(-50%, -30%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -150%) scale(1); }
+        }    
     </style>
 </head>
 <body>
-
+<div id="score-board" class="score-board">🏆 Score: 0</div>
 <div class="app-container">
     <div id="view-menu">
         <h1 style="color:#fff; margin-bottom: 5px;">Hogwarts Words</h1>
@@ -266,6 +307,7 @@
      */
     const Game = {
         unit: 1, groupIndex: 0, wordIndex: 0, phase: 1,
+        score: 0, // <--- 新增：这里加一行 score
         currentWords: [], repCount: 0,
         recognition: null, isListening: false, allGroups: [],
         
@@ -277,40 +319,63 @@
 
     // 1. 自动保存函数
     function autoSave() {
-        // 保存当前单元和当前组
         localStorage.setItem('currentUnit', Game.unit);
         localStorage.setItem('currentGroup', Game.groupIndex);
     
-        // 显示右下角提示
-        const toast = document.getElementById('save-toast');
-        toast.classList.add('show');
+        // --- 新增：保存分数 ---
+        localStorage.setItem('currentScore', Game.score);
+        // -------------------
     
-        // 2秒后自动消失
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 2000);
+        const toast = document.getElementById('save-toast');
+        if(toast) {
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
     }
-
+    // --- 新增：加分与特效函数 ---
+    function addScore(points) {
+        // 1. 加分
+        Game.score += points;
+    
+        // 2. 更新右上角显示
+        document.getElementById('score-board').innerText = `🏆 Score: ${Game.score}`;
+    
+        // 3. 播放加分动画
+        const popup = document.createElement('div');
+        popup.className = 'score-popup';
+        popup.innerText = `🎉 +${points} 分!`;
+        document.body.appendChild(popup);
+    
+        // 4. 动画结束后清理掉这个元素
+        setTimeout(() => popup.remove(), 1500);
+    
+        // 5. 立即保存一次（把分数也存进去）
+        autoSave();
+    }   
+           
+            
     // 2. 检查是否有存档 (自动读取)
     function checkAutoLoad() {
         const savedUnit = localStorage.getItem('currentUnit');
         const savedGroup = localStorage.getItem('currentGroup');
+    
+        // --- 新增：读取分数 ---
+        const savedScore = localStorage.getItem('currentScore');
+        if (savedScore) {
+            Game.score = parseInt(savedScore);
+            document.getElementById('score-board').innerText = `🏆 Score: ${Game.score}`;
+        }
+        // -------------------
 
-        // 如果有存档
         if (savedUnit && savedGroup) {
             const u = parseInt(savedUnit);
             const g = parseInt(savedGroup);
-        
-            // 弹窗询问
-            if (confirm(`欢迎回来！\n检测到上次学到了 Unit ${u} - Group ${g + 1}。\n是否继续？`)) {
-                // 用户点“确定”，直接跳过去
+            if(confirm(`检测到上次学习进度：Unit ${u} - Group ${g + 1}\n当前积分：${Game.score}\n是否继续？`)) {
                 startGame(u, g);
             } else {
-                // 用户点“取消”，显示菜单，不做操作
                 renderMenu();
             }
         } else {
-            // 没有存档，正常显示菜单
             renderMenu();
         }
     }
@@ -610,11 +675,17 @@ function systemSpeak(text) {
         Game.wordIndex++;
         if(Game.wordIndex >= Game.currentWords.length) {
             if(Game.phase < 4) startPhase(Game.phase + 1);
-            else if (Game.phase === 4) { showToast("Level Cleared!", true); setTimeout(() => loadGroup(Game.groupIndex + 1), 1000); }
+            else if (Game.phase === 4) { 
+                showToast("Group Cleared!", true); 
+                
+                // === 新增：小组通关，奖励 10 分！===
+                addScore(10); 
+                // ===============================
+
+                setTimeout(() => loadGroup(Game.groupIndex + 1), 1000); 
+            }
             else finishUnit();
-        } else {
-            renderCard();
-        }
+        } else renderCard();
     }
 
     function generateOptions(correctObj) {
