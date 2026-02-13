@@ -357,7 +357,19 @@
             const isLocked = u > unlocked;
             div.className = `unit-item ${isLocked ? 'locked' : 'active'}`;
             div.textContent = `Unit ${u}`;
-            if(!isLocked) div.onclick = () => startGame(u);
+            if(!isLocked) div.onclick = () => {
+                // === 手机激活魔法 ===
+                // 强制手机清清嗓子，播放一个空的或者短的声音
+                if('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel(); // 先打断之前的
+                    const wakeUp = new SpeechSynthesisUtterance('Ready'); // 读一个短词
+                    wakeUp.volume = 0; // 静音播放（骗过浏览器）
+                    window.speechSynthesis.speak(wakeUp);
+                }
+                // ===================
+
+                startGame(u);
+            };
             UI.unitList.appendChild(div);
         });
     }
