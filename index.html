@@ -318,15 +318,57 @@
 
     // --- 语音核心 ---
     function initSpeech() {
-        window.speak = function(text) {
-            if('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(text);
-                u.lang = 'en-US'; u.rate = 1.0;
-                window.speechSynthesis.speak(u);
-            }
-        };
+        // --- 微信专用：双保险发音系统 ---
 
+// 定义一个全局音频对象，用来播放 MP3
+const onlineAudio = new Audio();
+
+window.speak = function(text) {
+    // 1. 判断是不是微信浏览器
+    const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+
+    // 2. 如果是微信，或者文本很短（是单词），优先使用“有道词典”的在线 MP3
+    // (Type=2 是美音，Type=1 是英音)
+    if (isWeChat || text.split(' ').length <= 3) {
+        // 打印日志方便调试
+        console.log("检测到微信或单词，使用在线 MP3 播放: " + text);
+        
+        // 停止之前的音频
+        onlineAudio.pause();
+        onlineAudio.currentTime = 0;
+
+        // 设置在线发音地址 (这里用有道词典的接口，免费稳定)
+        onlineAudio.src = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`;
+        
+        // 播放
+        onlineAudio.play().catch(e => {
+            console.error("MP3 播放失败，尝试回退到系统语音", e);
+            // 如果断网了，MP3 播不出来，再尝试用系统语音兜底
+            systemSpeak(text);
+        });
+    } 
+    // 3. 如果不是微信，或者是长句子，用浏览器的系统语音
+    else {
+        systemSpeak(text);
+    }
+};
+
+// 原来的系统语音函数，作为备用
+function systemSpeak(text) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        u.rate = 1.0;
+        // 尝试获取语音包
+        const voices = window.speechSynthesis.getVoices();
+        const enVoice = voices.find(v => v.lang.includes('en-US'));
+        if (enVoice) u.voice = enVoice;
+        
+        window.speechSynthesis.speak(u);
+    }
+}
+  
         if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             Game.recognition = new SpeechRecognition();
