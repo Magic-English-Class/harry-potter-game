@@ -568,31 +568,83 @@
                 }
             }
     
+            // ==========================================
+            // 新增：自动降级为“触控模式”的函数
+            // 当检测到环境不支持时，静默转换为点击过关模式
+            // ==========================================
+            function switchToManualMode() {
+                Game.isListening = false;
+                // 改变麦克风按钮的外观和功能
+                UI.btnMic.innerText = "✨"; // 变成魔法棒图标
+                UI.btnMic.classList.remove('listening');
+                UI.btnMic.style.background = "linear-gradient(135deg, #FFD700, #FF8F00)"; // 变成亮金色
+                UI.btnMic.style.boxShadow = "0 0 15px rgba(255, 215, 0, 0.8)";
+                
+                // 改变提示文字，引导孩子自己读完后点击
+                UI.micHint.innerHTML = "网络魔法受限<br>请大声朗读后，<b>点击按钮</b>发射魔法！";
+                
+                // 绑定点击事件：不再调用麦克风，而是直接算作读对
+                UI.btnMic.onclick = function() {
+                    handleSuccess();
+                };
+            }
+
+            // ==========================================
+            // 语音识别核心检测逻辑
+            // ==========================================
+            const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+
+            // 1. 如果在微信里，直接放弃语音识别，瞬间切换到触控模式
+            if (isWeChat) {
+                switchToManualMode();
+                return;
+            }
+
+            // 2. 检查浏览器是否支持 Web Speech API
             if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 Game.recognition = new SpeechRecognition();
                 Game.recognition.lang = 'en-US'; 
                 Game.recognition.continuous = false; 
                 Game.recognition.interimResults = false;
+                
                 Game.recognition.onstart = () => {
                     Game.isListening = true;
                     UI.btnMic.classList.add('listening'); 
-                    UI.micHint.textContent = "正在施法...";
+                    UI.micHint.textContent = "正在听你读...";
                 };
+                
                 Game.recognition.onend = () => {
                     Game.isListening = false;
                     UI.btnMic.classList.remove('listening'); 
                     UI.micHint.textContent = "点击施放魔法";
                 };
+                
                 Game.recognition.onresult = (e) => {
                     verifySpeech(e.results[0][0].transcript);
                 };
+
+                // 3. 致命错误捕捉：如果在非微信浏览器中遇到了网络阻断或权限问题
+                Game.recognition.onerror = (e) => {
+                    // 不弹窗报错！直接静默切换为触控通关模式
+                    console.log("语音引擎遇到问题:", e.error, "自动降级为触控模式");
+                    switchToManualMode();
+                };
+
                 UI.btnMic.onclick = function() {
                     if(Game.isListening) Game.recognition.stop();
-                    else Game.recognition.start();
+                    else {
+                        try {
+                            Game.recognition.start();
+                        } catch(err) {
+                            // 捕捉一些奇葩浏览器的启动报错
+                            switchToManualMode();
+                        }
+                    }
                 };
             } else {
-                console.log("当前浏览器不支持语音识别");
+                // 4. 浏览器内核彻底不支持，直接切换触控模式
+                switchToManualMode();
             }
         }
 
