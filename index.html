@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>315班单词大闯关 - 新春贺岁版</title>
+    <title>315班单词大闯关</title>
     <style>
         /* ==========================================
-           1. 全局基础与防误触重置 (春节喜庆版)
+           1. 全局基础与防误触重置
            ========================================== */
         * {
             box-sizing: border-box;
@@ -15,25 +15,19 @@
             touch-action: manipulation; 
             user-select: none; 
             -webkit-user-select: none;
-            font-family: 'Helvetica Neue', Helvetica, Arial, 'Microsoft YaHei', sans-serif;
         }
 
         :root {
             --success: #10B981;
             --error: #EF4444;
-            --gold-light: #FFEA00;
-            --gold-main: #FFD700;
-            --gold-dark: #FFB300;
-            --red-light: #FF5252;
-            --red-main: #D32F2F;
-            --red-dark: #8B0000;
-            --text-dark: #3E2723; /* 深棕色，适合在暖白底色上阅读 */
+            --text: #ffffff;
         }
 
         body {
-            /* 喜庆的中国红发光渐变背景，仿佛挂满红灯笼 */
-            background: radial-gradient(circle at 50% 20%, var(--red-light) 0%, var(--red-main) 40%, var(--red-dark) 100%);
-            color: #ffffff;
+            /* 魔法深渊渐变背景 */
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
             width: 100vw;
             overflow-x: hidden;
@@ -54,57 +48,53 @@
         }
 
         /* ==========================================
-           2. 顶部状态栏与积分板 (金字招牌)
+           2. 顶部状态栏与积分板
            ========================================== */
         .score-board {
             position: fixed;
             top: 15px;
             right: 15px;
-            background: linear-gradient(135deg, #D32F2F, #B71C1C);
-            color: var(--gold-main);
-            padding: 8px 18px;
-            border-radius: 25px;
-            border: 2px solid var(--gold-main);
-            font-weight: 900;
-            font-size: 1.25rem;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: #FFD700;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            font-weight: bold;
+            font-size: 1.2rem;
             z-index: 1000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4), inset 0 0 8px rgba(255,215,0,0.3);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         .status-bar {
             width: 100%;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 12px 18px;
-            border-radius: 15px;
-            font-size: 0.95rem;
-            color: var(--gold-light);
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #a8dadc;
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
             font-weight: bold;
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         /* ==========================================
-           3. 战斗舞台 (Arena) - 黑底 + 金框红地毯
+           3. 战斗舞台 (Arena)
            ========================================== */
         .arena {
             width: 100%;
             height: 140px;
-            /* 保持纯黑底色，完美隐藏你的刺客图片黑边 */
-            background: #000000; 
-            border-radius: 16px;
-            border: 3px solid var(--gold-main);
-            /* 下边框做成粗粗的红地毯效果，配上内阴影 */
-            border-bottom: 12px solid var(--red-main);
+            background: #000000; /* 修改这里：变成纯黑色，完美融合图片黑边 */
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.3); /* 金色魔法边框保留，很好看 */
             position: relative; 
             overflow: hidden; 
             margin-bottom: 15px;
-            box-shadow: inset 0 -4px 0 var(--gold-dark), 0 8px 20px rgba(0,0,0,0.6);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8); /* 稍微加深了一点内部阴影，更有深邃感 */
         }
 
         .timer-display {
@@ -112,63 +102,57 @@
             top: 8px;
             left: 50%; 
             transform: translateX(-50%);
-            color: var(--gold-main); 
-            font-weight: 900; 
+            color: #FFD700; 
+            font-weight: bold; 
             font-size: 1.1rem; 
-            background: rgba(139, 0, 0, 0.85); 
-            padding: 4px 18px; 
-            border-radius: 20px; 
+            background: rgba(0,0,0,0.6); 
+            padding: 4px 15px; 
+            border-radius: 15px; 
             z-index: 5;
-            border: 2px solid var(--gold-main);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,215,0,0.2);
         }
 
-        /* 角色放大 1.5 倍 (112px) 保持不变 */
         .entity {
             position: absolute;
-            bottom: 5px; /* 稍微下沉一点贴合红地毯 */
-            width: 112px; 
+            bottom: 10px; 
+            width: 75px; 
             height: auto;
             transition: transform 0.1s;
-            z-index: 2;
         }
         
-        #harry-emoji { left: 10px; }
-        #monster-emoji { right: 10px; }
-        .moving-left { right: calc(100% - 120px) !important; }
+        #harry-emoji { left: 15px; z-index: 2; width: 112px; }
+        #monster-emoji { right: 15px; z-index: 2; }
+        
+        .moving-left { right: calc(100% - 90px) !important; }
 
-        /* 爆竹烟花般的魔法光束 */
         #magic-beam {
             position: absolute;
-            bottom: 55px; 
-            left: 100px; 
-            width: 50px; 
-            height: 8px; /* 稍微加粗 */
-            border-radius: 10px;
-            /* 金红交织的火花拖尾 */
-            background: linear-gradient(to right, transparent, #FF4500, #FFD700, #FFFFFF);
+            bottom: 45px; 
+            left: 80px; 
+            width: 40px; 
+            height: auto;
             opacity: 0; 
             z-index: 3;
-            filter: drop-shadow(0 0 10px #FF4500) drop-shadow(0 0 5px #FFD700);
+            filter: drop-shadow(0 0 8px #00f2fe);
         }
-        .shooting { left: calc(100% - 120px) !important; opacity: 1 !important; }
+        .shooting { left: calc(100% - 90px) !important; opacity: 1 !important; }
 
         /* ==========================================
-           4. 学习内容区 (红包请柬质感卡片)
+           4. 学习内容区 (深色玻璃态卡片)
            ========================================== */
         .card {
-            /* 暖白色/浅米色，保护视力且清晰 */
-            background: #FFF8DC; 
-            /* 红金双层边框效果 */
-            border: 5px solid var(--red-main);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 0 4px var(--gold-main);
-            padding: 30px 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            padding: 25px 20px;
             width: 100%;
             text-align: center;
             margin-bottom: 15px;
             position: relative;
-            min-height: 240px;
+            min-height: 220px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -177,178 +161,141 @@
         }
 
         .word-text { 
-            font-size: 3.2rem; 
+            font-size: 2.8rem; 
             font-weight: 900;
-            color: var(--red-dark); /* 深红色单词，非常醒目 */
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: #ffffff; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.4);
             margin: 5px 0; 
             line-height: 1.2; 
         }
 
-        .meaning-text { 
-            font-size: 1.3rem; 
-            color: var(--text-dark); /* 深棕色释义，柔和易读 */
-            margin-bottom: 25px; 
-            font-weight: bold;
-        }
+        .meaning-text { font-size: 1.2rem; color: #b0c4de; margin-bottom: 20px; }
 
-        /* 录音按钮：福气金红按钮 */
+        /* 录音按钮 */
         .mic-container { position: relative; margin-top: 10px; }
         .mic-btn {
-            width: 90px; height: 90px; border-radius: 50%; 
-            background: radial-gradient(circle, var(--gold-main), #FF8F00); 
-            color: var(--red-main); 
-            border: 4px solid #FFFFFF; 
-            font-size: 38px; cursor: pointer; display: flex; 
+            width: 85px; height: 85px; border-radius: 50%; 
+            background: linear-gradient(135deg, #00c6ff, #0072ff); 
+            color: white; border: 3px solid rgba(255,255,255,0.2); 
+            font-size: 32px; cursor: pointer; display: flex; 
             justify-content: center; align-items: center;
-            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.4); 
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            z-index: 2; outline: none;
+            box-shadow: 0 8px 20px rgba(0, 114, 255, 0.4); 
+            transition: all 0.2s; z-index: 2; outline: none;
         }
-        .mic-btn:active { transform: scale(0.9); box-shadow: 0 4px 10px rgba(211, 47, 47, 0.4); }
+        .mic-btn:active { transform: scale(0.9); }
         .mic-btn.listening { 
-            background: radial-gradient(circle, #FFFFFF, var(--gold-main));
-            border-color: var(--red-main); 
-            animation: pulse-gold 1.5s infinite;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border-color: #ff4b2b; animation: pulse-red 1.5s infinite;
         }
 
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.8); }
-            70% { box-shadow: 0 0 0 25px rgba(255, 215, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 75, 43, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 75, 43, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 75, 43, 0); }
         }
 
-        /* 选项按钮：大红底色 + 金色边框 */
-        .options-grid { display: grid; grid-template-columns: 1fr; gap: 14px; width: 100%; }
+        /* 选项按钮 */
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; width: 100%; }
         .option-btn {
-            background: linear-gradient(to bottom, #E53935, #C62828); 
-            border: 2px solid var(--gold-main); 
-            padding: 18px; border-radius: 16px; font-size: 1.15rem; font-weight: 900;
-            color: #FFFFFF; text-align: center; cursor: pointer; transition: all 0.1s;
-            box-shadow: 0 5px 0 #8B0000, 0 8px 10px rgba(0,0,0,0.2); /* 立体按键感 */
-            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); 
+            padding: 16px; border-radius: 15px; font-size: 1.1rem; font-weight: bold;
+            color: white; text-align: center; cursor: pointer; transition: all 0.15s;
         }
         .option-btn:active { 
-            transform: translateY(5px); 
-            box-shadow: 0 0 0 #8B0000, 0 0 0 transparent !important;
+            transform: scale(0.95); background: rgba(255, 215, 0, 0.2); 
+            border-color: #FFD700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
         }
-        .option-btn.correct { background: linear-gradient(to bottom, #34D399, #059669); border-color: #A7F3D0; box-shadow: 0 5px 0 #047857; }
-        .option-btn.wrong { background: linear-gradient(to bottom, #9CA3AF, #4B5563); border-color: #D1D5DB; box-shadow: 0 5px 0 #374151; color: #E5E7EB; }
+        .option-btn.correct { background: rgba(16, 185, 129, 0.3); border-color: var(--success); }
+        .option-btn.wrong { background: rgba(239, 68, 68, 0.3); border-color: var(--error); }
 
-        /* 拼写输入框 */
         .spell-input {
-            width: 90%; padding: 15px; font-size: 1.6rem; text-align: center;
-            background: #FFFFFF; color: var(--red-dark); 
-            border: 3px solid var(--red-light); 
-            border-radius: 15px; outline: none; margin-bottom: 15px;
-            font-weight: bold; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            width: 90%; padding: 15px; font-size: 1.5rem; text-align: center;
+            background: rgba(0,0,0,0.3); color: white; border: 2px solid rgba(255,255,255,0.2); 
+            border-radius: 12px; outline: none; margin-bottom: 15px;
         }
-        .spell-input:focus { border-color: var(--gold-main); box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        .spell-input:focus { border-color: #00f2fe; }
 
         /* ==========================================
-           5. 选单界面 (福牌样式)
+           5. 选单界面
            ========================================== */
         #view-menu { text-align: center; padding-top: 40px; }
-        
-        .main-title {
-            color: var(--gold-main);
-            margin-bottom: 5px; 
-            font-size: 2.6rem; 
-            font-weight: 900;
-            /* 金字发光阴影 */
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 4px 6px rgba(0,0,0,0.6);
-            letter-spacing: 2px;
-        }
-
-        .unit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px; width: 100%; margin-top: 35px; }
+        .unit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 12px; width: 100%; margin-top: 30px; }
         .unit-item { 
-            background: linear-gradient(to bottom, #FFF8DC, #FFE4B5); 
-            border: 3px solid var(--red-main); 
-            border-radius: 16px; padding: 22px 0; text-align: center; cursor: pointer; 
-            font-weight: 900; color: var(--red-dark); transition: all 0.2s; 
-            box-shadow: 0 6px 0 var(--red-dark), 0 8px 15px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 12px; padding: 20px 0; text-align: center; cursor: pointer; 
+            font-weight: bold; transition: all 0.2s; backdrop-filter: blur(5px);
         }
-        .unit-item:active { transform: translateY(6px); box-shadow: 0 0 0 transparent; }
+        .unit-item:active { transform: scale(0.95); }
         .unit-item.active { 
-            border-color: var(--gold-main); 
-            background: linear-gradient(to bottom, #FFD700, #FFB300);
-            color: #8B0000; 
-            box-shadow: 0 6px 0 #D84315, 0 8px 15px rgba(0,0,0,0.3);
+            border-color: #00f2fe; background: rgba(0, 242, 254, 0.1);
+            color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
         }
-        .unit-item.locked { opacity: 0.6; cursor: not-allowed; filter: grayscale(50%); box-shadow: none; transform: translateY(6px); }
+        .unit-item.locked { opacity: 0.5; cursor: not-allowed; }
 
         /* ==========================================
            6. 特效与动画 
            ========================================== */
         .flash-red { animation: flashRed 0.5s; }
         @keyframes flashRed { 
-            0% { box-shadow: inset 0 0 50px rgba(255, 0, 0, 0.8); } 
-            100% { box-shadow: inset 0 -4px 0 var(--gold-dark), 0 8px 20px rgba(0,0,0,0.6); } 
+            0% { background-color: rgba(239, 68, 68, 0.4); } 
+            100% { background-color: rgba(0, 0, 0, 0.2); } 
         }
         
         .anim-shake { animation: shake 0.3s ease-in-out; }
         @keyframes shake { 
-            0% { transform: translateX(0); } 25% { transform: translateX(-6px); } 
-            50% { transform: translateX(6px); } 75% { transform: translateX(-6px); } 
+            0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 
+            50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 
             100% { transform: translateX(0); } 
         }
 
-        /* 提示框 */
+        /* 优化了提示框样式，支持长文本折行且居中 */
         .feedback-toast {
             position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.85); color: white; padding: 10px 22px; border-radius: 15px;
-            font-size: 1rem; font-weight: bold; opacity: 0; transition: all 0.3s ease-out; 
-            pointer-events: none; z-index: 10; width: max-content; max-width: 90%; text-align: center; line-height: 1.4;
-            border: 2px solid var(--gold-main); box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.85); color: white; padding: 8px 18px; border-radius: 12px;
+            font-size: 0.95rem; font-weight: bold; opacity: 0; transition: all 0.3s ease-out; 
+            pointer-events: none; z-index: 10;
+            width: max-content; max-width: 90%; text-align: center; line-height: 1.4;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .feedback-toast.show { opacity: 1; top: 15px; }
-        .feedback-toast.success { background: linear-gradient(135deg, #059669, #047857); border-color: #34D399; }
-        .feedback-toast.error { background: linear-gradient(135deg, #DC2626, #991B1B); border-color: #FCA5A5; }
+        .feedback-toast.success { background: rgba(16, 185, 129, 0.9); box-shadow: 0 0 15px rgba(16, 185, 129, 0.5); }
+        .feedback-toast.error { background: rgba(239, 68, 68, 0.9); box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
 
         .score-popup {
             position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            color: var(--gold-main); font-weight: 900;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 5px 5px #8B0000;
-            pointer-events: none; z-index: 2000; width: 100%; text-align: center;
+            color: #FFD700; font-weight: 900;
+            text-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 2px 2px 4px #000;
+            pointer-events: none; z-index: 2000;
+            width: 100%; text-align: center;
             animation: floatUp 2.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
         
         @keyframes floatUp {
-            0% { opacity: 0; transform: translate(-50%, -10%) scale(0.5); }
-            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+            0% { opacity: 0; transform: translate(-50%, -20%) scale(0.5); }
+            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
             80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
             100% { opacity: 0; transform: translate(-50%, -100%) scale(1.2); }
         }
 
         .save-toast {
-            position: fixed; bottom: 20px; right: 20px; 
-            background: linear-gradient(135deg, #FFF8DC, #FFE4B5); color: #D32F2F; 
-            padding: 10px 20px; border-radius: 30px; font-size: 0.95rem; font-weight: 900; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4); opacity: 0; transform: translateY(20px); transition: all 0.4s ease;
-            pointer-events: none; z-index: 9999; border: 2px solid var(--gold-main);
+            position: fixed; bottom: 20px; right: 20px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            color: #4ade80; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: bold; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); opacity: 0; transform: translateY(20px); transition: all 0.4s ease;
+            pointer-events: none; z-index: 9999; border: 1px solid rgba(74, 222, 128, 0.3);
         }
         .save-toast.show { opacity: 1; transform: translateY(0); }
 
-        .btn-link { 
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #FFF; 
-            padding: 10px 20px; border-radius: 20px; text-decoration: none; margin-top: 15px; cursor: pointer; 
-            font-size: 1.05rem; font-weight: bold; transition: background 0.2s;
-        }
-        .btn-link:active { background: rgba(255,255,255,0.2); }
-        
-        .footer-reset { 
-            margin-top: 50px; margin-bottom: 20px; font-size: 0.85rem; color: #FFCDD2; 
-            text-decoration: underline; cursor: pointer; opacity: 0.7; font-weight: bold;
-        }
+        .btn-link { background: none; border: none; color: #a8dadc; text-decoration: underline; margin-top: 15px; cursor: pointer; font-size: 1rem; }
+        .footer-reset { margin-top: 50px; margin-bottom: 20px; font-size: 0.8rem; color: #6B7280; text-decoration: underline; cursor: pointer; opacity: 0.5; }
     </style>
 </head>
 <body>
-    <div id="score-board" class="score-board">🏆 Score: <span id="score-value">0</span></div>
+    <div id="score-board" class="score-board">🏆 Score: 0</div>
 
     <div class="app-container">
         <div id="view-menu">
-            <h1 class="main-title">315班单词大闯关</h1>
-            <p style="color:var(--gold-light); font-size: 1.2rem; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">🏮 新春贺岁版 🏮</p>
+            <h1 style="color:#fff; margin-bottom: 10px; font-size: 2.2rem; text-shadow: 0 0 15px rgba(0,242,254,0.5);">315班单词大闯关</h1>
+            <p style="color:#a8dadc; font-size: 1rem;">魔法对决版</p>
         
             <div id="unit-list" class="unit-grid"></div>
             
@@ -375,22 +322,22 @@
             <div class="card">
                 <div id="feedback" class="feedback-toast">Correct!</div>
                 
-                <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
+                <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
                     <div id="area-word" class="word-text">Word</div>
-                    <button onclick="speakCurrentWord()" style="background:#FFF3E0; border:3px solid #FFB300; border-radius:50%; width: 45px; height: 45px; font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 0 #FFB300; transition: transform 0.1s;">🔊</button>
+                    <button onclick="speakCurrentWord()" style="background:none; border:none; font-size:1.8rem; cursor:pointer; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));">🔊</button>
                 </div>
                 <div id="area-meaning" class="meaning-text">Meaning</div>
 
                 <div id="area-mic" class="mic-container hidden">
                     <button id="btn-mic" class="mic-btn">🎙️</button>
-                    <p id="mic-hint" style="font-size: 0.95rem; color:#8B0000; margin-top:15px; font-weight: bold;">点击施放魔法</p>
+                    <p id="mic-hint" style="font-size: 0.85rem; color:#a8dadc; margin-top:15px;">点击施放魔法</p>
                 </div>
 
                 <div id="area-options" class="options-grid hidden"></div>
 
                 <div id="area-spell" class="hidden" style="width:100%">
                     <input type="text" id="input-spell" class="spell-input" placeholder="输入咒语 (拼写)" autocomplete="off">
-                    <button class="option-btn" style="width: 100%; margin-top: 5px;" onclick="checkSpelling()">⚡ 发射魔咒</button>
+                    <button class="option-btn" style="background: rgba(0, 242, 254, 0.2); border-color: #00f2fe; color: white;" onclick="checkSpelling()">⚡ 发射魔咒</button>
                 </div>
             </div>
 
@@ -407,7 +354,7 @@
             unit: 1, groupIndex: 0, wordIndex: 0, phase: 1,
             score: 0, timerId: null, timeLeft: 10,  
             currentWords: [], repCount: 0, 
-            failCount: 0, 
+            failCount: 0, // === 新增：失败计数器 ===
             recognition: null, isListening: false, allGroups: [],
             sfxShoot: new Audio('assets/shoot.mp3'),
             sfxFail: new Audio('assets/fail.mp3')
@@ -425,7 +372,7 @@
 
         function addScore(points, customText) {
             Game.score += points;
-            document.getElementById('score-value').innerText = Game.score; // 修复：用 score-value
+            document.getElementById('score-board').innerText = `🏆 Score: ${Game.score}`;
             localStorage.setItem('totalScore', Game.score); 
             
             const popup = document.createElement('div');
@@ -451,7 +398,7 @@
             const savedScore = localStorage.getItem('currentScore');
             if (savedScore) {
                 Game.score = parseInt(savedScore);
-                document.getElementById('score-value').innerText = Game.score;
+                document.getElementById('score-board').innerText = `🏆 Score: ${Game.score}`;
             }
 
             if (savedUnit && savedGroup) {
@@ -497,7 +444,7 @@
 
         function startCombatTimer() {
             clearInterval(Game.timerId);
-            Game.timeLeft = 20; 
+            Game.timeLeft = 20; // 这里的初始值是配合你之前逻辑设定的倒计时
             document.getElementById('arena-timer').innerText = `⏳ 10s`;
             
             const monster = UI.monster;
@@ -526,8 +473,9 @@
 
         function handleTimeout() {
             stopCombatTimer();
-            Game.failCount++; 
+            Game.failCount++; // === 新增：即便是不说话导致超时，也算作一次失败 ===
             
+            // === 新增：如果孩子连着 6 次超时，一样触发保护机制，跳过当前单词 ===
             if (Game.failCount >= 6) {
                 playAttack(() => {
                     showToast("没关系，这个词太狡猾啦，我们先学下一个！", true);
@@ -552,9 +500,9 @@
             initSpeech();
             
             Game.score = parseInt(localStorage.getItem('totalScore')) || 0;
-            const scoreValue = document.getElementById('score-value');
-            if(scoreValue) {
-                scoreValue.innerText = Game.score;
+            const scoreBoard = document.getElementById('score-board');
+            if(scoreBoard) {
+                scoreBoard.innerText = `🏆 Score: ${Game.score}`;
             }
             
             renderMenu();
@@ -567,7 +515,7 @@
             
             const beam = UI.spell;
             beam.style.transition = 'none';
-            beam.style.left = '100px';
+            beam.style.left = '80px';
             beam.style.opacity = '1';
             void beam.offsetWidth;
             beam.style.transition = 'left 0.2s linear, opacity 0.2s';
@@ -705,7 +653,7 @@
         function startPhase(p) {
             Game.phase = p; Game.wordIndex = 0;
             Game.repCount = 0; 
-            Game.failCount = 0; 
+            Game.failCount = 0; // === 新增：进入新阶段重置失败计数 ===
             
             const pNames = ["Shadowing (跟读)", "Listening (听音)", "Speaking (说英)", "Spelling (拼写)", "Review"];
             UI.statusPhase.textContent = pNames[p-1] || "Review";
@@ -763,7 +711,7 @@
         }
 
         function handleSuccess() {
-            Game.failCount = 0; 
+            Game.failCount = 0; // === 新增：只要答对一次，就立刻清空失败计数 ===
             
             playAttack(() => {
                 showToast("Magic Hit!", true);
@@ -786,33 +734,37 @@
             });
         }
 
+        // === 核心修改：保护机制与跳过逻辑 ===
         function handleFail() {
             Game.failCount++; 
             
+            // 达到 6 次，强制触放大招并跳过！
             if (Game.failCount >= 6) {
                 playAttack(() => {
+                    // 弹出温柔的提示，使用绿色的成功样式安抚孩子
                     showToast("没关系，这个词太狡猾啦，我们先学下一个！", true);
                     
-                    Game.repCount = 0; 
+                    Game.repCount = 0; // 防御性重置，防止 Phase 1 的状态混乱
                     Game.failCount = 0;
-                    nextWord(); 
+                    nextWord(); // 完美跳入下一个环节
                 });
-                return; 
+                return; // 直接结束，不再播放失败摇晃动画
             }
 
+            // 没有达到 6 次，正常走失败逻辑
             playFail();
             showToast("Miss!", false);
         }
 
         function nextWord() {
-            Game.failCount = 0; 
+            Game.failCount = 0; // === 新增：进入下一个单词时，彻底重置失败计数 ===
             Game.wordIndex++;
             
             if(Game.wordIndex >= Game.currentWords.length) {
                 if(Game.phase < 4) startPhase(Game.phase + 1);
                 else if (Game.phase === 4) { 
                     
-                    addScore(10, "🎉 恭喜完成！<br><span style='color:#FFD700;'>+10 分</span>");
+                    addScore(10, "🎉 恭喜完成！<br><span style='color:#00f2fe;'>+10 分</span>");
                     setTimeout(() => loadGroup(Game.groupIndex + 1), 2500);
                 }
                 else finishUnit();
