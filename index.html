@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Harry Potter: Magic Word Battle</title>
+    <title>315班单词大闯关</title>
     <style>
         /* ==========================================
            1. 全局基础与防误触重置
@@ -18,7 +18,6 @@
         }
 
         :root {
-            --primary: #4F46E5;
             --success: #10B981;
             --error: #EF4444;
             --text: #ffffff;
@@ -84,7 +83,7 @@
         }
 
         /* ==========================================
-           3. 战斗舞台 (Arena) 适配你的图片
+           3. 战斗舞台 (Arena)
            ========================================== */
         .arena {
             width: 100%;
@@ -116,7 +115,7 @@
         .entity {
             position: absolute;
             bottom: 10px; 
-            width: 75px; /* 调整了图片大小适配手机 */
+            width: 75px; 
             height: auto;
             transition: transform 0.1s;
         }
@@ -124,7 +123,6 @@
         #harry-emoji { left: 15px; z-index: 2; }
         #monster-emoji { right: 15px; z-index: 2; }
         
-        /* 配合你 JS 的动画类 */
         .moving-left { right: calc(100% - 90px) !important; }
 
         #magic-beam {
@@ -140,7 +138,7 @@
         .shooting { left: calc(100% - 90px) !important; opacity: 1 !important; }
 
         /* ==========================================
-           4. 学习内容区 (玻璃态卡片)
+           4. 学习内容区 (深色玻璃态卡片)
            ========================================== */
         .card {
             background: rgba(255, 255, 255, 0.05);
@@ -171,37 +169,23 @@
             line-height: 1.2; 
         }
 
-        .meaning-text { 
-            font-size: 1.2rem;
-            color: #b0c4de; 
-            margin-bottom: 20px; 
-        }
+        .meaning-text { font-size: 1.2rem; color: #b0c4de; margin-bottom: 20px; }
 
-        /* 巨型录音按钮 */
+        /* 录音按钮 */
         .mic-container { position: relative; margin-top: 10px; }
         .mic-btn {
-            width: 85px;
-            height: 85px; 
-            border-radius: 50%; 
+            width: 85px; height: 85px; border-radius: 50%; 
             background: linear-gradient(135deg, #00c6ff, #0072ff); 
-            color: white;
-            border: 3px solid rgba(255,255,255,0.2); 
-            font-size: 32px; 
-            cursor: pointer; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
+            color: white; border: 3px solid rgba(255,255,255,0.2); 
+            font-size: 32px; cursor: pointer; display: flex; 
+            justify-content: center; align-items: center;
             box-shadow: 0 8px 20px rgba(0, 114, 255, 0.4); 
-            transition: all 0.2s; 
-            z-index: 2; 
-            outline: none;
+            transition: all 0.2s; z-index: 2; outline: none;
         }
         .mic-btn:active { transform: scale(0.9); }
         .mic-btn.listening { 
             background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            border-color: #ff4b2b;
-            box-shadow: 0 0 20px rgba(255, 75, 43, 0.6);
-            animation: pulse-red 1.5s infinite;
+            border-color: #ff4b2b; animation: pulse-red 1.5s infinite;
         }
 
         @keyframes pulse-red {
@@ -213,72 +197,43 @@
         /* 选项按钮 */
         .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; width: 100%; }
         .option-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            padding: 16px; 
-            border-radius: 15px;
-            font-size: 1.1rem; 
-            font-weight: bold;
-            color: white;
-            text-align: center; 
-            cursor: pointer; 
-            transition: all 0.15s;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); 
+            padding: 16px; border-radius: 15px; font-size: 1.1rem; font-weight: bold;
+            color: white; text-align: center; cursor: pointer; transition: all 0.15s;
         }
-        .option-btn:active { transform: scale(0.95); background: rgba(255, 215, 0, 0.2); }
+        .option-btn:active { 
+            transform: scale(0.95); background: rgba(255, 215, 0, 0.2); 
+            border-color: #FFD700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
         .option-btn.correct { background: rgba(16, 185, 129, 0.3); border-color: var(--success); }
         .option-btn.wrong { background: rgba(239, 68, 68, 0.3); border-color: var(--error); }
 
-        /* 拼写输入框 */
         .spell-input {
-            width: 90%;
-            padding: 15px; 
-            font-size: 1.5rem; 
-            text-align: center;
-            background: rgba(0,0,0,0.3);
-            color: white;
-            border: 2px solid rgba(255,255,255,0.2); 
-            border-radius: 12px; 
-            outline: none; 
-            margin-bottom: 15px;
+            width: 90%; padding: 15px; font-size: 1.5rem; text-align: center;
+            background: rgba(0,0,0,0.3); color: white; border: 2px solid rgba(255,255,255,0.2); 
+            border-radius: 12px; outline: none; margin-bottom: 15px;
         }
         .spell-input:focus { border-color: #00f2fe; }
 
         /* ==========================================
-           5. 选单界面 (Menu View)
+           5. 选单界面
            ========================================== */
-        #view-menu {
-            text-align: center;
-            padding-top: 40px;
-        }
-        .unit-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
-            gap: 12px; 
-            width: 100%;
-            margin-top: 30px; 
-        }
+        #view-menu { text-align: center; padding-top: 40px; }
+        .unit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 12px; width: 100%; margin-top: 30px; }
         .unit-item { 
-            background: rgba(255, 255, 255, 0.1); 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            border-radius: 12px;
-            padding: 20px 0; 
-            text-align: center; 
-            cursor: pointer; 
-            font-weight: bold;
-            transition: all 0.2s;
-            backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 12px; padding: 20px 0; text-align: center; cursor: pointer; 
+            font-weight: bold; transition: all 0.2s; backdrop-filter: blur(5px);
         }
         .unit-item:active { transform: scale(0.95); }
         .unit-item.active { 
-            border-color: #00f2fe;
-            background: rgba(0, 242, 254, 0.1);
-            color: #00f2fe; 
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+            border-color: #00f2fe; background: rgba(0, 242, 254, 0.1);
+            color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
         }
         .unit-item.locked { opacity: 0.5; cursor: not-allowed; }
 
         /* ==========================================
-           6. 特效与动画 (完美兼容你的 JS)
+           6. 特效与动画 
            ========================================== */
         .flash-red { animation: flashRed 0.5s; }
         @keyframes flashRed { 
@@ -288,57 +243,50 @@
         
         .anim-shake { animation: shake 0.3s ease-in-out; }
         @keyframes shake { 
-            0% { transform: translateX(0); } 
-            25% { transform: translateX(-5px); } 
-            50% { transform: translateX(5px); } 
-            75% { transform: translateX(-5px); } 
+            0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 
+            50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 
             100% { transform: translateX(0); } 
         }
 
+        /* 优化了提示框样式，支持长文本折行且居中 */
         .feedback-toast {
-            position: absolute;
-            top: -50px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.8); color: white; padding: 6px 15px; border-radius: 12px;
-            font-size: 1rem; font-weight: bold; opacity: 0;
-            transition: all 0.3s ease-out; pointer-events: none; z-index: 10;
+            position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.85); color: white; padding: 8px 18px; border-radius: 12px;
+            font-size: 0.95rem; font-weight: bold; opacity: 0; transition: all 0.3s ease-out; 
+            pointer-events: none; z-index: 10;
+            width: max-content; max-width: 90%; text-align: center; line-height: 1.4;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .feedback-toast.show { opacity: 1; top: 15px; }
         .feedback-toast.success { background: rgba(16, 185, 129, 0.9); box-shadow: 0 0 15px rgba(16, 185, 129, 0.5); }
         .feedback-toast.error { background: rgba(239, 68, 68, 0.9); box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
 
         .score-popup {
-            position: fixed;
-            top: 40%; left: 50%; transform: translate(-50%, -50%);
-            color: #FFD700; font-size: 3.5rem; font-weight: 900;
-            text-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+            position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            color: #FFD700; font-weight: 900;
+            text-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 2px 2px 4px #000;
             pointer-events: none; z-index: 2000;
-            animation: floatUp 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+            width: 100%; text-align: center;
+            animation: floatUp 2.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
+        
         @keyframes floatUp {
-            0% { opacity: 0; transform: translate(-50%, -30%) scale(0.5); }
-            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-            100% { opacity: 0; transform: translate(-50%, -150%) scale(1); }
+            0% { opacity: 0; transform: translate(-50%, -20%) scale(0.5); }
+            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -100%) scale(1.2); }
         }
 
         .save-toast {
-            position: fixed; bottom: 20px; right: 20px;
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
-            color: #4ade80; padding: 10px 20px; border-radius: 30px;
-            font-size: 0.9rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            opacity: 0; transform: translateY(20px); transition: all 0.4s ease;
+            position: fixed; bottom: 20px; right: 20px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            color: #4ade80; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: bold; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); opacity: 0; transform: translateY(20px); transition: all 0.4s ease;
             pointer-events: none; z-index: 9999; border: 1px solid rgba(74, 222, 128, 0.3);
         }
         .save-toast.show { opacity: 1; transform: translateY(0); }
 
-        .btn-link { 
-            background: none; border: none; color: #a8dadc; 
-            text-decoration: underline; margin-top: 15px; cursor: pointer; font-size: 1rem;
-        }
-        
-        .footer-reset {
-            margin-top: 50px; margin-bottom: 20px; font-size: 0.8rem;
-            color: #6B7280; text-decoration: underline; cursor: pointer; opacity: 0.5;
-        }
+        .btn-link { background: none; border: none; color: #a8dadc; text-decoration: underline; margin-top: 15px; cursor: pointer; font-size: 1rem; }
+        .footer-reset { margin-top: 50px; margin-bottom: 20px; font-size: 0.8rem; color: #6B7280; text-decoration: underline; cursor: pointer; opacity: 0.5; }
     </style>
 </head>
 <body>
@@ -346,13 +294,13 @@
 
     <div class="app-container">
         <div id="view-menu">
-            <h1 style="color:#fff; margin-bottom: 10px; font-size: 2.2rem; text-shadow: 0 0 15px rgba(0,242,254,0.5);">Hogwarts Words</h1>
-            <p style="color:#a8dadc; font-size: 1rem;">Magic Battle Edition</p>
+            <h1 style="color:#fff; margin-bottom: 10px; font-size: 2.2rem; text-shadow: 0 0 15px rgba(0,242,254,0.5);">315班单词大闯关</h1>
+            <p style="color:#a8dadc; font-size: 1rem;">魔法对决版</p>
         
             <div id="unit-list" class="unit-grid"></div>
             
             <div onclick="resetProgress()" class="footer-reset">
-                Reset All Progress
+                Reset All Progress (重置进度)
             </div> 
         </div>
 
@@ -360,7 +308,6 @@
             
             <div id="battle-arena" class="arena">
                 <div id="arena-timer" class="timer-display">⏳ 10s</div>
-                
                 <img src="assets/harry.png" id="harry-emoji" class="entity" alt="Harry">
                 <img src="assets/spell.png" id="magic-beam" alt="Spell">
                 <img src="assets/monster.png" id="monster-emoji" class="entity" alt="Monster">
@@ -403,71 +350,56 @@
     <script src="word_data.js"></script>
 
     <script>
-        /**
-         * 全局状态管理
-         */
         const Game = {
             unit: 1, groupIndex: 0, wordIndex: 0, phase: 1,
-            score: 0, 
-            timerId: null, timeLeft: 10,  
-            currentWords: [], repCount: 0,
+            score: 0, timerId: null, timeLeft: 10,  
+            currentWords: [], repCount: 0, 
+            failCount: 0, // === 新增：失败计数器 ===
             recognition: null, isListening: false, allGroups: [],
-            
-            // 音效对象
             sfxShoot: new Audio('assets/shoot.mp3'),
             sfxFail: new Audio('assets/fail.mp3')
         };
-        // --- 新增功能：自动存档系统 ---
 
-        // 1. 自动保存函数
         function autoSave() {
-            // --- 修改：为每个 Unit 单独保存当前的 Group 序号 ---
             localStorage.setItem('progress_unit_' + Game.unit, Game.groupIndex);
-            
-            // (积分保存保持不变)
             localStorage.setItem('currentScore', Game.score);
-            
             const toast = document.getElementById('save-toast');
             if(toast) {
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 2000);
             }
         }
-        // --- 新增：加分与特效函数 ---
-        function addScore(points) {
-            // 1. 内存中加分
+
+        function addScore(points, customText) {
             Game.score += points;
-            // 2. 更新右上角 UI
             document.getElementById('score-board').innerText = `🏆 Score: ${Game.score}`;
-            // === 新增：立即将新分数存入本地硬盘 ===
-            localStorage.setItem('totalScore', Game.score);
-            // ====================================
+            localStorage.setItem('totalScore', Game.score); 
             
-            // 3. 播放加分动画
             const popup = document.createElement('div');
             popup.className = 'score-popup';
-            popup.innerText = `🎉 +${points} 分!`;
-            document.body.appendChild(popup);
             
-            // 4. 动画结束后清理掉这个元素
-            setTimeout(() => popup.remove(), 1500);
-            // (触发组进度保存)
+            if (customText) {
+                popup.innerHTML = customText;
+                popup.style.fontSize = '2.5rem';
+                popup.style.lineHeight = '1.4';
+            } else {
+                popup.innerText = `🎉 +${points} 分!`;
+                popup.style.fontSize = '3.5rem';
+            }
+            
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 2500); 
             autoSave();
         }
-            
-                
-        // 2. 检查是否有存档 (自动读取)
+
         function checkAutoLoad() {
             const savedUnit = localStorage.getItem('currentUnit');
             const savedGroup = localStorage.getItem('currentGroup');
-        
-            // --- 新增：读取分数 ---
             const savedScore = localStorage.getItem('currentScore');
             if (savedScore) {
                 Game.score = parseInt(savedScore);
                 document.getElementById('score-board').innerText = `🏆 Score: ${Game.score}`;
             }
-            // -------------------
 
             if (savedUnit && savedGroup) {
                 const u = parseInt(savedUnit);
@@ -482,20 +414,13 @@
             }
         }
 
-        // 3. 重置进度函数
         function resetProgress() {
             if (confirm("⚠️ 警告：\n确定要清空所有学习进度吗？\n这将无法恢复！")) {
                 localStorage.clear();
-                // 清空所有记录
                 location.reload();
-                // 刷新页面
             }
         } 
-        
 
-
-
-        /** DOM 元素缓存 */
         const UI = {
             menu: document.getElementById('view-menu'),
             game: document.getElementById('view-game'),
@@ -504,7 +429,6 @@
             statusProg: document.getElementById('status-progress'),
             statusRep: document.getElementById('status-rep'),
             areaWord: document.getElementById('area-word'),
-        
             areaMeaning: document.getElementById('area-meaning'),
             areaMic: document.getElementById('area-mic'),
             areaOpts: document.getElementById('area-options'),
@@ -513,42 +437,34 @@
             micHint: document.getElementById('mic-hint'),
             inputSpell: document.getElementById('input-spell'),
             feedback: document.getElementById('feedback'),
-            
-            // 游戏元素
             harry: document.getElementById('harry-emoji'),
-        
             monster: document.getElementById('monster-emoji'),
             spell: document.getElementById('magic-beam')
         };
-        // --- 新增：10秒倒计时与怪兽移动系统 ---
+
         function startCombatTimer() {
             clearInterval(Game.timerId);
-            Game.timeLeft = 20;
+            Game.timeLeft = 20; // 这里的初始值是配合你之前逻辑设定的倒计时
             document.getElementById('arena-timer').innerText = `⏳ 10s`;
             
             const monster = UI.monster;
-            // 用刚绑定的新怪兽
-            // 瞬间拉回最右边，取消动画
             monster.style.transition = 'none';
             monster.style.right = '15px';
-            void monster.offsetWidth; // 强制重绘
+            void monster.offsetWidth; 
             
-            // 开启 10秒匀速向左移动
             monster.style.transition = 'right 20s linear';
             monster.classList.add('moving-left');
 
-            // 启动倒计时
             Game.timerId = setInterval(() => {
                 Game.timeLeft--;
                 document.getElementById('arena-timer').innerText = `⏳ ${Game.timeLeft}s`;
-                if(Game.timeLeft <= 0) handleTimeout(); // 超时处理
+                if(Game.timeLeft <= 0) handleTimeout(); 
             }, 1000);
         }
 
         function stopCombatTimer() {
             clearInterval(Game.timerId);
             const monster = UI.monster;
-            // 冻结怪兽当前位置
             const currentRight = window.getComputedStyle(monster).right;
             monster.style.transition = 'none';
             monster.style.right = currentRight;
@@ -557,137 +473,103 @@
 
         function handleTimeout() {
             stopCombatTimer();
-            // 扣 1 分
-            Game.score = Math.max(0, Game.score - 1);
-            document.getElementById('score-board').innerText = `🏆 Score: ${Game.score}`;
-            localStorage.setItem('totalScore', Game.score);
-
-            playFail(); // 播放失败摇晃
+            Game.failCount++; // === 新增：即便是不说话导致超时，也算作一次失败 ===
             
-            // 屏幕闪红警告
+            // === 新增：如果孩子连着 6 次超时，一样触发保护机制，跳过当前单词 ===
+            if (Game.failCount >= 6) {
+                playAttack(() => {
+                    showToast("没关系，这个词太狡猾啦，我们先学下一个！", true);
+                    Game.repCount = 0;
+                    Game.failCount = 0;
+                    nextWord();
+                });
+                return;
+            }
+
+            playFail(); 
+            
             const arena = document.getElementById('battle-arena');
             arena.classList.add('flash-red');
             setTimeout(() => arena.classList.remove('flash-red'), 500);
             
-            // 重新开启这道题的 10 秒倒计时
             startCombatTimer();
         }
 
-        /** 初始化 */
         window.onload = function() {
             if(typeof wordList === 'undefined') return alert("未找到 word_data.js");
             initSpeech();
             
-            // === 新增：初始化读取总积分 ===
-            // 尝试从本地读取 totalScore，如果没有记录（第一次玩），就默认为 0
             Game.score = parseInt(localStorage.getItem('totalScore')) || 0;
-            // 立刻更新右上角的 UI 计分板
             const scoreBoard = document.getElementById('score-board');
             if(scoreBoard) {
                 scoreBoard.innerText = `🏆 Score: ${Game.score}`;
             }
-            // ============================
             
             renderMenu();
         };
 
-        // --- 游戏动画与音效控制 ---
-        
         function playAttack(callback) {
             stopCombatTimer();
-            // 答对了，立刻停止计时和怪兽移动
             
-            if(Game.sfxShoot) { Game.sfxShoot.currentTime = 0;
-            Game.sfxShoot.play().catch(e=>{}); }
+            if(Game.sfxShoot) { Game.sfxShoot.currentTime = 0; Game.sfxShoot.play().catch(e=>{}); }
             
             const beam = UI.spell;
-            // 魔法子弹准备
             beam.style.transition = 'none';
             beam.style.left = '80px';
             beam.style.opacity = '1';
             void beam.offsetWidth;
-            // 发射！(0.2秒飞过去)
             beam.style.transition = 'left 0.2s linear, opacity 0.2s';
             beam.classList.add('shooting');
             setTimeout(() => {
                 beam.classList.remove('shooting');
                 beam.style.opacity = '0';
                 
-                // 击退怪兽（瞬间回到右边）
                 UI.monster.style.transition = 'none';
                 UI.monster.style.right = '15px';
                 
-        
                 if (callback) callback();
             }, 200);
         }
 
         function playFail() {
-            // 1. 播放音效
             Game.sfxFail.currentTime = 0;
             Game.sfxFail.play().catch(e => console.log("Audio play error", e));
-
-            // 2. 哈利摇晃
             UI.harry.classList.remove('anim-shake');
             void UI.harry.offsetWidth;
             UI.harry.classList.add('anim-shake');
         }
 
-
-        // --- 语音核心 ---
         function initSpeech() {
-            // --- 微信专用：双保险发音系统 ---
-
-            // 定义一个全局音频对象，用来播放 MP3
             const onlineAudio = new Audio();
             window.speak = function(text) {
-                // 1. 判断是不是微信浏览器
                 const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
-                // 2. 如果是微信，或者文本很短（是单词），优先使用“有道词典”的在线 MP3
-                // (Type=2 是美音，Type=1 是英音)
                 if (isWeChat || text.split(' ').length <= 3) {
-                    // 打印日志方便调试
-                    console.log("检测到微信或单词，使用在线 MP3 播放: " + text);
-                    // 停止之前的音频
                     onlineAudio.pause();
                     onlineAudio.currentTime = 0;
-
-                    // 设置在线发音地址 (这里用有道词典的接口，免费稳定)
                     onlineAudio.src = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`;
-                    // 播放
                     onlineAudio.play().catch(e => {
-                        console.error("MP3 播放失败，尝试回退到系统语音", e);
-                        // 如果断网了，MP3 播不出来，再尝试用系统语音兜底
                         systemSpeak(text);
                     });
-                } 
-                // 3. 如果不是微信，或者是长句子，用浏览器的系统语音
-                else {
+                } else {
                     systemSpeak(text);
                 }
             };
 
-            // 原来的系统语音函数，作为备用
             function systemSpeak(text) {
                 if ('speechSynthesis' in window) {
                     window.speechSynthesis.cancel();
                     const u = new SpeechSynthesisUtterance(text);
                     u.lang = 'en-US';
                     u.rate = 1.0;
-                    // 尝试获取语音包
                     const voices = window.speechSynthesis.getVoices();
                     const enVoice = voices.find(v => v.lang.includes('en-US'));
                     if (enVoice) u.voice = enVoice;
-            
                     window.speechSynthesis.speak(u);
                 }
             }
     
-            // --- 升级版：实时流语音识别引擎 ---
-            // --- 恢复为稳定版：单次语音识别引擎 ---
             if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition ||
-                window.webkitSpeechRecognition;
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 Game.recognition = new SpeechRecognition();
                 Game.recognition.lang = 'en-US'; 
                 Game.recognition.continuous = false; 
@@ -697,17 +579,14 @@
                     UI.btnMic.classList.add('listening'); 
                     UI.micHint.textContent = "正在施法...";
                 };
-                
                 Game.recognition.onend = () => {
                     Game.isListening = false;
                     UI.btnMic.classList.remove('listening'); 
                     UI.micHint.textContent = "点击施放魔法";
                 };
-                
                 Game.recognition.onresult = (e) => {
                     verifySpeech(e.results[0][0].transcript);
                 };
-                
                 UI.btnMic.onclick = function() {
                     if(Game.isListening) Game.recognition.stop();
                     else Game.recognition.start();
@@ -716,7 +595,7 @@
                 console.log("当前浏览器不支持语音识别");
             }
         }
-        // --- 游戏逻辑 ---
+
         function renderMenu() {
             UI.menu.classList.remove('hidden');
             UI.game.classList.add('hidden'); UI.unitList.innerHTML = '';
@@ -727,32 +606,22 @@
                 div.className = `unit-item ${isLocked ? 'locked' : 'active'}`;
                 div.textContent = `Unit ${u}`;
                 if(!isLocked) div.onclick = () => {
-                
-                    // 1. 激活手机语音引擎
                     if('speechSynthesis' in window) { 
                         window.speechSynthesis.cancel(); 
                         const w = new SpeechSynthesisUtterance(''); 
                         w.volume = 0; 
-        
                         window.speechSynthesis.speak(w); 
                     }
-                    
-                    // 2. 去查询这个 Unit 的专属进度
                     const savedProgress = localStorage.getItem('progress_unit_' + u);
-            
-        
                     if (savedProgress === 'COMPLETED') {
-                        // 如果已经通关了，提示是否复习
                         if (confirm(`Unit ${u} 已经通关啦！🎉\n是否需要清除进度，重新复习一遍？`)) {
                             localStorage.removeItem('progress_unit_' + u);
-                            startGame(u, 0); // 清除记录，从第 0 组重新开始
+                            startGame(u, 0); 
                         }
                     } else if (savedProgress !== null) {
-                        // 如果有进度记录，直接跳到对应的组
                         const groupIndex = parseInt(savedProgress);
                         startGame(u, groupIndex); 
                     } else {
-                        // 第一次玩这个单元，从第 0 组开始
                         startGame(u, 0);
                     }
                 };
@@ -765,10 +634,8 @@
             const raw = wordList.filter(w => w.unit === unitId);
             Game.allGroups = [];
             for(let i=0; i<raw.length; i+=5) Game.allGroups.push(raw.slice(i, i+5));
-            // 切换界面
             UI.menu.classList.add('hidden'); 
             UI.game.classList.remove('hidden');
-            // 加载指定 Group (如果是新游戏就是 0，读档就是记录的数字)
             loadGroup(startGroupIndex);
         }
 
@@ -777,19 +644,17 @@
                 startUnitReview();
                 return; 
             }
-            
             Game.groupIndex = idx;
             Game.currentWords = Game.allGroups[idx];
-            
-            // --- 新增：每加载一个新组，就自动保存一次 ---
             autoSave(); 
-            
             startPhase(1);
         }
 
         function startPhase(p) {
             Game.phase = p; Game.wordIndex = 0;
-            Game.repCount = 0;
+            Game.repCount = 0; 
+            Game.failCount = 0; // === 新增：进入新阶段重置失败计数 ===
+            
             const pNames = ["Shadowing (跟读)", "Listening (听音)", "Speaking (说英)", "Spelling (拼写)", "Review"];
             UI.statusPhase.textContent = pNames[p-1] || "Review";
             renderCard();
@@ -802,9 +667,6 @@
             
             UI.areaMic.classList.add('hidden'); UI.areaOpts.classList.add('hidden'); UI.areaSpell.classList.add('hidden');
             UI.areaWord.classList.remove('hidden'); UI.areaMeaning.classList.remove('hidden'); UI.statusRep.classList.add('hidden');
-            // 复位怪兽样式
-        
-            // 如果你有不同怪兽图，可以在这里根据 index 切换 src
 
             if(Game.phase === 1) {
                 UI.statusRep.classList.remove('hidden');
@@ -833,32 +695,24 @@
                 UI.inputSpell.value = ''; UI.inputSpell.focus();
             }
             startCombatTimer();
-            // <--- 加上这一行
         }
 
-        // --- 升级版：实时秒批验证逻辑 ---
-        // --- 恢复为稳定版：单次判定逻辑 ---
-        // --- 恢复为稳定版：单次判定逻辑 ---
         function verifySpeech(transcript) {
-            // 防止报错
             if (!Game.currentWords || !Game.currentWords[Game.wordIndex]) return;
             const target = Game.currentWords[Game.wordIndex].word;
-            // 过滤掉标点符号和空格
             const cleanTrans = transcript.toLowerCase().replace(/[^a-z0-9]/g, '');
             const cleanTarget = target.toLowerCase().replace(/[^a-z0-9]/g, '');
             
-            // 如果发音匹配成功
             if(cleanTrans.includes(cleanTarget) || cleanTarget.includes(cleanTrans)) {
                 handleSuccess();
             } else {
-                // 如果发音不匹配，触发失败摇晃和扣分逻辑
                 handleFail();
             }
         }
 
         function handleSuccess() {
-            // 修复报错 1：将错误的 updateScore 改为正确的 addScore
-            addScore(1);
+            Game.failCount = 0; // === 新增：只要答对一次，就立刻清空失败计数 ===
+            
             playAttack(() => {
                 showToast("Magic Hit!", true);
                 
@@ -866,10 +720,8 @@
                     Game.repCount++; 
                     UI.statusRep.textContent = `Hit ${Game.repCount}/3`;
                     
-        
                     if(Game.repCount < 3) {
-                        startCombatTimer(); // 每次读对，怪兽重新从右边过来
-                        // 修复报错 2：将错误的 manualSpeak 改回正常的 speak 发音
+                        startCombatTimer(); 
                         speak(Game.currentWords[Game.wordIndex].word);
                     } else 
                     { 
@@ -878,27 +730,42 @@
                     }
                 } else {
                     nextWord();
-            
                 }
             });
         }
 
+        // === 核心修改：保护机制与跳过逻辑 ===
         function handleFail() {
+            Game.failCount++; 
+            
+            // 达到 6 次，强制触放大招并跳过！
+            if (Game.failCount >= 6) {
+                playAttack(() => {
+                    // 弹出温柔的提示，使用绿色的成功样式安抚孩子
+                    showToast("没关系，这个词太狡猾啦，我们先学下一个！", true);
+                    
+                    Game.repCount = 0; // 防御性重置，防止 Phase 1 的状态混乱
+                    Game.failCount = 0;
+                    nextWord(); // 完美跳入下一个环节
+                });
+                return; // 直接结束，不再播放失败摇晃动画
+            }
+
+            // 没有达到 6 次，正常走失败逻辑
             playFail();
             showToast("Miss!", false);
         }
 
         function nextWord() {
+            Game.failCount = 0; // === 新增：进入下一个单词时，彻底重置失败计数 ===
             Game.wordIndex++;
+            
             if(Game.wordIndex >= Game.currentWords.length) {
                 if(Game.phase < 4) startPhase(Game.phase + 1);
                 else if (Game.phase === 4) { 
-                    showToast("Group Cleared!", true);
-                    // === 新增：小组通关，奖励 10 分！===
-                    addScore(10);
-                    // ===============================
-
-                    setTimeout(() => loadGroup(Game.groupIndex + 1), 1000);
+                    
+                    addScore(10, "🎉 恭喜完成！<br><span style='color:#00f2fe;'>+10 分</span>");
+                    setTimeout(() => loadGroup(Game.groupIndex + 1), 2500);
                 }
                 else finishUnit();
             } else renderCard();
@@ -916,7 +783,6 @@
                 btn.textContent = opt.meaning;
                 btn.onclick = () => {
                     if(opt.word === correctObj.word) handleSuccess();
-            
                     else { handleFail(); speak(correctObj.word); }
                 };
                 UI.areaOpts.appendChild(btn);
@@ -955,7 +821,6 @@
                 localStorage.setItem('unlockedUnit', Game.unit + 1);
             }
             
-            // --- 修改：给当前单元打上“彻底通关”的标记 ---
             localStorage.setItem('progress_unit_' + Game.unit, 'COMPLETED');
             setTimeout(() => { UI.game.classList.add('hidden'); renderMenu(); }, 2000);
         }
@@ -966,10 +831,7 @@
             setTimeout(() => UI.feedback.className = 'feedback-toast', 1000);
         }
         function exitToMenu() { UI.game.classList.add('hidden'); renderMenu(); }
-        function resetProgress() { if(confirm("重置进度？")) { localStorage.clear(); renderMenu();
-        } }
         UI.inputSpell.addEventListener('keyup', (e) => { if(e.key === 'Enter') checkSpelling(); });
-        // 手动播放当前单词
         function speakCurrentWord() {
             if (Game.currentWords && Game.currentWords[Game.wordIndex]) {
                 speak(Game.currentWords[Game.wordIndex].word);
